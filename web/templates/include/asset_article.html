@@ -1,0 +1,43 @@
+{% load  article_tag %}
+
+<div class="page-header view" >
+
+
+
+         <h3>
+             {{ response.article_data.title }}
+         </h3>
+
+         <h4>简介：{{ response.article_data.summary }}</h4>
+
+</div>
+
+<div class="view" >
+     <p>
+         {% article_message  response.article_data.content %}
+     </p>
+
+     <p>
+          <a class="btn btn-primary btn-large" href="/edit-article-{{ device_type_id }}-{{ asset_id }}.html"> 编辑备注 </a>
+     </p>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

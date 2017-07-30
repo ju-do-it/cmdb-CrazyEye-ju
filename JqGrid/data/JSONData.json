@@ -1,0 +1,40 @@
+
+{
+    "records": "2",
+    "total": 2,
+    "page": "1",
+
+    "rows": [
+        {
+            "cell": [
+                "VMware-56 4d f9 4d 9b eb 55 4f-e7 de a4 cc ad 00 a9 39",
+                "server",
+                "VMware, Inc.",
+                "VMware Virtual Platform",
+                475,
+                "Intel(R) Core(TM) i5-5200U CPU @ 2.20GHz",
+                1,
+                1,
+                null,
+                null
+            ],
+            "new_asset_id": 2
+        },
+        {
+            "cell": [
+                "00331-10000-00001-AA536",
+                "server",
+                "LENOVO",
+                "20DFA048CD",
+                null,
+                "Intel(R) Core(TM) i5-5200U CPU @ 2.20GHz",
+                1,
+                2,
+                null,
+                null
+            ],
+            "new_asset_id": 3
+        }
+    ]
+
+}

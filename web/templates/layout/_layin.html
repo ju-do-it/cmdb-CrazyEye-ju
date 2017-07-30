@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="/static/plugins/bootstrap/css/bootstrap.css"/>
+    <link rel="stylesheet" href="/static/plugins/font-awesome/css/font-awesome.css"/>
+    <link rel="stylesheet" href="/static/css/backend.css"/>
+    <link rel="stylesheet" href="/static/css/commons.css"/>
+
+    {% block header-css %} {% endblock %}
+
+</head>
+
+<body>
+
+    <div class="pg-header">
+        {% include 'include/header_menu.html' %}
+    </div>
+
+<div class="pg-body">
+    <div class="menu">
+        <a class="menu-item" href="/password_manage.html">
+            <i class="fa fa-desktop" aria-hidden="true"></i>
+            <span>密码表与备注</span>
+        </a>
+
+        <a id="menu_asset" class="menu-item" href="/cmdb/asset.html">
+            <i class="fa fa-connectdevelop" aria-hidden="true"></i>
+            <span>资产管理</span>
+        </a>
+        <a id="menu_user_profile" class="menu-item" href="/users.html">
+            <i class="fa fa-cogs" aria-hidden="true"></i>
+            <span>用户管理</span>
+        </a>
+        <a id="menu_business" class="menu-item" href="/business.html">
+            <i class="fa fa-free-code-camp" aria-hidden="true"></i>
+            <span>业务线管理</span>
+        </a>
+        <a id="menu_idc" class="menu-item" href="/idc.html">
+            <i class="fa fa-cloud-upload" aria-hidden="true"></i>
+            <span>IDC管理</span>
+        </a>
+        <a id="menu_tag" class="menu-item" href="/tag.html">
+            <i class="fa fa-cubes" aria-hidden="true"></i>
+            <span>标签管理</span>
+        </a>
+
+    </div>
+    <div class="content">
+
+        {% block page-wrapper %}
+            <div id="page-wrapper">
+            </div>
+        {% endblock %}
+
+    </div>
+
+</div>
+
+    <script type="text/javascript" src="/static/js/jquery-2.1.1.min.js"> </script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/static/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/js/cmdb/index.js"></script>
+
+{% block bottom-js %}
+
+{% endblock %}
+
+
+</body>
+</html>

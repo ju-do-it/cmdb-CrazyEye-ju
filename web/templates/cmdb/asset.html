@@ -1,0 +1,305 @@
+{#{% extends 'layout/_layin.html' %}#}
+{% extends 'layout/index.html' %}
+
+{% load cmdb_asset %}
+
+{% block  css %}
+    <link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.15/css/jquery.dataTables.css">
+{% endblock %}
+
+{% block  conent %}
+
+    <div id="page-wrapper">
+        <div class="navbar" id="breadcrumb" style="margin-bottom: 0">
+            <div class="navbar-inner">
+                <ul class="breadcrumb">
+                    <li>
+                        <a href="/cmdb/">首页</a>
+
+                    </li>
+                    <li class="active">资产管理</li>
+                </ul>
+            </div>
+        </div>
+        <div class="row-fluid">
+                <div class="span12" style="margin: 0 5px">
+                    <div class="btn-toolbar" style="padding: 0 0 10px 0;">
+                        <button type="button" class="btn btn-default" id="btn-checked-all" onclick="CheckedAll()"> 全选</button>
+                        <button type="button" class="btn btn-default" id="btn-checked-invert" onclick="CheckedInvert()"> 反选</button>
+                        <button type="button" class="btn btn-primary" id="btn-add"><i class="fa fa-plus"></i> 添加资产</button>
+{#                      <button type="button" class="btn btn-danger" id="btn-del"><i class="fa fa-remove"></i> 批量删除</button>#}
+                        <button id="modal-623473" href="#modal-container-623473" role="button" class="btn  btn-danger" data-toggle="modal"><i class="fa fa-remove"></i>删除所选 </button>
+
+                    </div>
+                </div>
+
+                <div class="container">
+                   <div class="row clearfix">
+                      <div class="col-md-12 column">
+
+
+                        <div class="modal fade" id="modal-container-623473" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="alert alert-dismissable alert-danger" contenteditable="false">
+                                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                                            <h4>确定删除资产？</h4>
+                                            <strong>警告！</strong>
+                                            与该资产相关联的网卡、硬盘、内存和日志等将全部被删除！
+{#                                         <div class="" style="text-align: right" >#}
+{#                                         <button type="button" class="btn btn-default" data-dismiss="modal">取消</button> <button type="button" class="btn btn-primary">确定</button>#}
+{#                                         </div>#}
+                                         {# 删除所选的资产#}
+                                           <form method="post" onsubmit="return ActionValidation(this)">{% csrf_token %}
+
+                                               <div class="" style="text-align: right" >
+                                                  <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                                                  <input  type="submit" class="btn btn-primary"  value="确定">
+                                               </div>
+                                           </form>
+
+                                    </div>
+
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                      </div>
+                   </div>
+                </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default" style="margin: 0 5px">
+
+                    <div class="panel-body">
+                        <table id="table_id_example" class="display row-border" style="font-size: 8px">
+                            <thead>
+                                <tr>
+                                    <th>选择</th>
+                                    <th>序号</th>
+                                    <th>主机名</th>
+                                    <th>系统</th>
+                                    <th>资产类型</th>
+                                     <th>监控</th>
+                                    <th>IP地址</th>
+{#                                    <th>网络标识</th>#}
+                                    <th>机房</th>
+{#                                    <th>机柜号</th>#}
+                                    <th>型号</th>
+                                    <th>配置</th>
+                                     <th>业务</th>
+                                    <th>标签</th>
+                                    <th>状态</th>
+                                    <th>操作</th>
+
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for obj in cmdb_models_obj %}
+                                    <tr>
+                                        <td nid="{{ obj.id }}" >
+                                            <input  tag='obj_checkbox' onclick="CheckboxFcun(this)" value="{{ obj.id }}" type="checkbox" />
+                                        </td>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>{{ obj.server.hostname }}</td>
+                                        <td>{{ obj.server.os_version }}</td>
+                                        <td>{% display_asset_type_name obj %}</td>
+                                        <td><a href="#" >点击查看</a></td>
+                                        <td><p>{{ obj.networkdevice.intranet_ip }}(内)</p>
+                                            <p>{{ obj.networkdevice.management_ip }}(公)</p>
+                                        </td>
+{#                                        <td>{{ obj.networkdevice.management_ip }}</td>} 这里如果有网络设备的话，也可以使用到 networkdevice的表 #}
+                                        <td>{{ obj.idc.name }}</td>
+{#                                      <td>{{ obj.cabinet_num }}</td>#}
+                                         <td>{{ obj.cabinet_order }}</td>
+
+                                        <td>
+                                            CPU: {{  obj.server.cpu_count }}核 | 内存: {{ obj.memory.capacity }}
+                                        </td>
+                                        <td>{{  obj.business_unit.name }}</td>
+                                        <td>{% display_asset_tags_name obj %}</td>
+                                        <td>{% display_asset_status_name obj %}</td>
+
+                                        <td>
+
+                                        <a href="?type=select&id={{ obj.server.id }}">查看详细</a> |
+                                        {% send_asset_type_id obj %} | <a  href="#">远程连接</a>
+
+                                        <div class="dropdown">
+
+                                            <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" >
+                                               更多
+                                            <span class="caret"></span></a>
+
+                                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                                <li role="presentation">
+                                                    <a role="menuitem" style="font-size:10px" tabindex="-1" href="#">重置密码</a>
+                                                </li>
+                                                <li role="presentation">
+                                                    <a role="menuitem" style="font-size:10px"  tabindex="-1" href="#">重启</a>
+                                                </li>
+                                                <li role="presentation">
+                                                    <a role="menuitem" style="font-size:10px" tabindex="-1" href="#">....</a>
+                                                </li>
+                                                <li role="presentation" class="divider"></li>
+                                                <li role="presentation">
+                                                    <a role="menuitem" style="font-size:10px" tabindex="-1" href="#">链接</a>
+                                                </li>
+                                            </ul>
+
+                                        </div>
+
+                                        </td>
+                                    </tr>
+
+                                {% endfor %}
+
+                            </tbody>
+
+                        </table>
+                        <!-- /.table-responsive -->
+
+                    </div>
+                    <!-- /.panel-body -->
+                </div>
+                <!-- /.panel -->
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+    </div>
+
+
+
+{% endblock %}
+
+{% block js %}
+    <!-- DataTables -->
+    <script type="text/javascript" charset="utf8" src="http://cdn.datatables.net/1.10.15/js/jquery.dataTables.js"></script>
+    <!-- Custom Theme JavaScript -->
+    <script src="/static/plugins/sb-admin/js/sb-admin-2.js"></script>
+
+
+    <!-- Page-Level Demo Scripts - Tables - Use for reference -->
+    <script>
+
+    $(document).ready( function () {
+        $('#table_id_example').DataTable();
+    } );
+
+    $('#table_id_example').DataTable( {
+        "pageLength": 10,       // 默认显示10行
+{#        "pagingType":   "full_numbers",     //#}
+
+        language: {
+            "sProcessing": "处理中...",
+            "sLengthMenu": "显示 _MENU_ 项结果",
+            "sZeroRecords": "没有匹配结果",
+            "sInfo": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+            "sInfoEmpty": "显示第 0 至 0 项结果，共 0 项",
+            "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+            "sInfoPostFix": "",
+            "sSearch": "搜索:",
+            "sUrl": "",
+            "sEmptyTable": "表中数据为空",
+            "sLoadingRecords": "载入中...",
+            "sInfoThousands": ",",
+            "oPaginate": {
+                "sFirst": "首页",
+                "sPrevious": "上页",
+                "sNext": "下页",
+                "sLast": "末页"
+            },
+            "oAria": {
+                "sSortAscending": ": 以升序排列此列",
+                "sSortDescending": ": 以降序排列此列"
+            }
+        }
+    } );
+
+
+    $(function () {
+
+        // 给搜索框加样式
+        $("#table_id_example_filter input").addClass('form-control');
+        $("#table_id_example_filter input").attr('style', 'display: inline-block;width: 80%;');
+
+        // 点击表格行选中第一列复选框
+        $("#table_id_example tbody tr").click(function () {
+            console.log($(this).find('input[type=checkbox]').prop("checked"));
+
+            var input_status = $(this).find('input').prop("checked");
+            console.log(input_status);
+
+            if (input_status){
+                $(this).find('input').prop("checked", false);
+            }else{
+                $(this).find('input').prop("checked", true);
+            }
+        })
+    });
+
+    function CheckedAll() {
+        // 全选
+        $("#table_id_example tbody input:checkbox").prop("checked", true);
+    }
+
+    function CheckedInvert() {
+        // 反选
+        $("#table_id_example tbody input:checkbox").each(function () {
+            var checked_status = $(this).prop("checked");
+            if(checked_status){
+                $(this).prop("checked", false);
+            }else{
+                $(this).prop("checked", true);
+            }
+        })
+    }
+
+    function CheckboxFcun(obj) {
+        // 当行首的 checkbox 被单击时触发
+        if(checked_status){
+            $(obj).prop("checked", false);
+        }else{
+            $(obj).prop("checked", true);
+        }
+    }
+
+
+    function ActionValidation(form_ele) {
+{#            if ($("select[name='action_select']").val() == "-1"){#}
+{#                alert("must select action before submit!");#}
+{#                return false;#}
+{#            }#}
+{#          此函数处理把选中的 ids 以列表的形式发送到后端  #}
+
+            var selected_objs = [];
+            $("input[tag='obj_checkbox']").each(function () {
+                if ($(this).prop("checked")){
+                    selected_objs.push($(this).val());
+                }
+            });//end each
+
+            console.log(selected_objs);
+            if ( selected_objs.length ==0){
+                alert("must select at least one object to run the action!");
+                return false;
+            }
+
+            var selected_objs_ele = "<input name='selected_ids' type='hidden' value=" + JSON.stringify(selected_objs) + " >" ;
+            $(form_ele).append(selected_objs_ele);
+
+            return true;
+
+        }
+
+    </script>
+
+{% endblock %}
+
